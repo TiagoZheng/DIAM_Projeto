@@ -5,9 +5,10 @@
     <title>Home Page</title>
 </head>
 <body>
+    <h1>ISCTFlow</h1>
 
-    <a href="{% url 'home:login' %}">Login</a>
-    <a href="{% url 'home:registration' %}">Registration</a>
+    <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
+    <button onclick="window.location.href='{% url 'home:registration' %}'">Register</button>
 
 </body>
 </html>

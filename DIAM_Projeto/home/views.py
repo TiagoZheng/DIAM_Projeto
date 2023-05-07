@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
@@ -23,3 +24,26 @@ def login(request):
     else:
         return render(request, 'home/login.html')
 
+
+def registration(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        email = request.POST['email']
+
+        # Check if password matches
+        if confirm_password != password:
+            return render(request, 'home/registration.html', {'error': 'Password does not match.'})
+
+        # Create the user
+        try:
+            user = User.objects.create_user(username=username, password=password, email=email)
+        except:
+            return render(request, 'home/registration.html', {'error': 'Failed to register'})
+
+        # If success
+        return redirect('success')
+
+    else:
+        return render(request, 'home/registration.html')
