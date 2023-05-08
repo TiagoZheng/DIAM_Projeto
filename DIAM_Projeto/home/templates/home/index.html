@@ -5,10 +5,16 @@
     <title>Home Page</title>
 </head>
 <body>
-    <h1>ISCTFlow</h1>
+    <h1>ISCTEFlow</h1>
 
+    {% if user.is_authenticated %}
+    <section class="user-info">
+            Bem-vindo(a),     <a href="{% url 'home:perfil' %}">{{ user.username }}</a>!
+        <a href="{% url 'home:logout' %}">Logout</a>
+    </section>
+{% else %}
     <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
     <button onclick="window.location.href='{% url 'home:registration' %}'">Register</button>
-
+{% endif %}
 </body>
 </html>

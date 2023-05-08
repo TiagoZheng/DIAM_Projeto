@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request):
@@ -17,7 +17,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             # Redirect to success page or some other URL TODO
-            return redirect('home/login.html','success')
+            return redirect('home:index')
         else:
             # Return invalid an invalid login message
             return render(request, 'home/login.html', {'error': 'Invalid login credentials.'})
@@ -48,3 +48,13 @@ def registration(request):
 
     else:
         return render(request, 'home/registration.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect('home:index')
+
+
+@login_required
+def perfil(request):
+    usuario = request.user
+    return render(request, 'home/perfil.html', {'usuario': usuario})
