@@ -7,8 +7,32 @@
 <body>
     <h1>ISCTFlow</h1>
 
-    <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
-    <button onclick="window.location.href='{% url 'home:registration' %}'">Register</button>
+{% if user.is_authenticated %}
+    <section class="user-info">
+            Welcome, <a href="{% url 'home:profile' %}">{{ user.username }}</a>!
+        <a href="{% url 'home:logout' %}">Logout</a>
+    </section>
 
+{% else %}
+
+    <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
+    <button onclick="window.location.href='{% url 'home:register' %}'">Register</button>
+    <button onclick="window.location.href='{% url 'home:new_post' %}'">New Post</button>
+
+{% endif %}
+
+{% if latest_post_list %}
+<ul>
+    {% for post in latest_post_list %}
+   <li>
+        {{ post.post_content }}
+    </a>
+</li>
+    {% endfor %}
+</ul>
+
+{% else %}
+<p>Nao ha publicacoes</p>
+{% endif %}
 </body>
 </html>
