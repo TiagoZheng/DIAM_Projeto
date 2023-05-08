@@ -9,7 +9,7 @@ def index(request):
     return render(request, 'home/index.html')
 
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -17,7 +17,7 @@ def login(request):
         if user is not None:
             login(request, user)
             # Redirect to success page or some other URL TODO
-            return redirect('success')
+            return redirect('home/login.html','success')
         else:
             # Return invalid an invalid login message
             return render(request, 'home/login.html', {'error': 'Invalid login credentials.'})
@@ -39,6 +39,7 @@ def registration(request):
         # Create the user
         try:
             user = User.objects.create_user(username=username, password=password, email=email)
+            user.save()
         except:
             return render(request, 'home/registration.html', {'error': 'Failed to register'})
 
