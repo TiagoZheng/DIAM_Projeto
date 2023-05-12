@@ -22,15 +22,6 @@ def details(request, post_id):
     return render(request, 'home/index', {'post': post})
 
 
-def results(request, post_id):
-    response = "Estes sao os resultados da questao %s."
-    return HttpResponse(response % post_id)
-
-
-def likes(request, post_id):
-    return HttpResponse("Votacao na questao %s." % post_id)
-
-
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -72,6 +63,7 @@ def register(request):
         return render(request, 'home/register.html')
 
 
+@login_required
 def new_post(request):
     if request.method == 'POST':
         post_content = request.POST['new_post']
@@ -83,6 +75,7 @@ def new_post(request):
         return render(request, 'home/new_post.html')
 
 
+@login_required
 def user_logout(request):
     logout(request)
     return redirect('home:index')
