@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Post, Comment
+from .models import Post, Comment, Like
 
 
 # Create your views here.
@@ -59,14 +59,16 @@ def register(request):
 
 @login_required
 def new_post(request):
+    context = {'request': request}
     if request.method == 'POST':
+        post_title = request.POST['post_title']
         post_content = request.POST['new_post']
         post_time = timezone.now()
-        post_new = Post(post_content=post_content, post_time=post_time, author=request.user)
+        post_new = Post(post_content=post_content, post_time=post_time, author=request.user, post_title=post_title)
         post_new.save()
         return HttpResponseRedirect(reverse('home:index'))
     else:
-        return render(request, 'home/new_post.html')
+        return render(request, 'home/new_post.html', context)
 
 
 @login_required
@@ -83,8 +85,12 @@ def profile(request):
 
 
 def like(request, post_id):
-    if request.method == 'POST':
-        post = Post.objects.get(pk=post_id)
+    post = get_object_or_404(Post, pk=post_id)
+    user = request.user
+    liked_post = Like.objects.filter(post=post, user=user).first()
+    if not liked_post:
+        like_post = Like(post=post, user=user)
+        like_post.save()
         post.likes_count += 1
         post.save()
     return redirect('home:index')

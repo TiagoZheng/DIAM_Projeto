@@ -11,6 +11,11 @@
 
   <form action="{% url 'home:new_post' %}" method="post">
   {% csrf_token %}
+
+  <label for="post_title">Post Title:</label><br>
+  <input type="text" id="post_title" name="post_title" required>
+  <br><br>
+
   <label for="new_post">New Post:</label><br>
   <textarea id="new_post" name="new_post" rows="4" cols="50" placeholder="Write your post here..."></textarea>
   <br><br>

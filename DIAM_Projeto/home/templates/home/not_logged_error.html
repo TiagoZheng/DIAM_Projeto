@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Not Logged In</title>
+</head>
+<body>
+    <h1>ISCTFlow</h1>
+
+    <a>You are not logged in, if you want to be able to make comments and likes you need to log in</a>
+
+    <br>
+    <a>If you do not have an account you can also create one for free</a>
+
+    <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
+    <button onclick="window.location.href='{% url 'home:register' %}'">Register</button>
+</body>
+</html>

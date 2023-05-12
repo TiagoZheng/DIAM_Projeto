@@ -19,22 +19,29 @@
 {% endif %}
 
     <br><br>
-
+{% if user.is_authenticated %}
     <button onclick="window.location.href='{% url 'home:new_post' %}'">New Post</button>
-
+{% endif %}
 {% if latest_post_list %}
 <ul>
 
   {% for post in latest_post_list %}
    <li>
-       <h2> {{ post.post_content }} </h2>
+       <h2> {{ post.post_title }} </h2>
+       <a>{{ post.post_content }} </a>
+       <br>
+       Likes: {{ post.likes_count }}
+       <br>
+       {% if user.is_authenticated %}
+       <br>
        <form method="post" action="{% url 'home:like' post.id %}">
            {% csrf_token %}
            <button type="submit">Like</button>
+           <a href="{% url 'home:write_comment' post.id %}">Write Comment</a>
        </form>
-       Likes: {{ post.likes_count }}
-       <a href="{% url 'home:write_comment' post.id %}">Write Comment</a>
-
+        {% else %}
+       <a href="{% url 'home:not_logged_error' %}">Write Comment</a>
+        {% endif %}
        <h3>Comments:</h3>
 
        {% for comment in post.comment_set.all %}

@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-from six import string_types
+
 import datetime
 
 User = get_user_model()
@@ -11,8 +11,9 @@ User = get_user_model()
 # Create your models here.
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-    post_content = models.CharField(max_length=300)
+    post_content = models.TextField()
     post_time = models.DateTimeField('post date')
+    post_title = models.CharField(max_length=100, default='No title')
     liked_by = models.ManyToManyField(User, related_name='post_likes')
     likes_count = models.PositiveIntegerField(default=0)
 
@@ -31,3 +32,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

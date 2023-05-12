@@ -1,5 +1,6 @@
 from django.urls import include, path
 from . import views
+from django.views.generic import TemplateView
 
 app_name = 'home'
 
@@ -27,5 +28,7 @@ urlpatterns = [
     path('<int:post_id>/write_comment', views.write_comment, name='write_comment'),
 
     path('profile/delete/<int:post_id>/', views.delete_post, name='delete_post'),
+
+    path('not_logged_error/', TemplateView.as_view(template_name='home/not_logged_error.html'),name='not_logged_error'),
 
 ]
