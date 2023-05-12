@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.utils import timezone
@@ -14,12 +14,6 @@ def index(request):
     latest_post_list = Post.objects.order_by('-post_time')[:5]
     context = {'latest_post_list': latest_post_list, }
     return render(request, 'home/index.html', context)
-
-
-def details(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    # return HttpResponse("Esta e a questao %s." % questao_id)
-    return render(request, 'home/index', {'post': post})
 
 
 def login_view(request):
@@ -68,7 +62,7 @@ def new_post(request):
     if request.method == 'POST':
         post_content = request.POST['new_post']
         post_time = timezone.now()
-        post_new = Post(post_content=post_content, post_time=post_time)
+        post_new = Post(post_content=post_content, post_time=post_time, author=request.user)
         post_new.save()
         return HttpResponseRedirect(reverse('home:index'))
     else:
@@ -84,7 +78,8 @@ def user_logout(request):
 @login_required
 def profile(request):
     user = request.user
-    return render(request, 'home/profile.html', {'user': user})
+    posts = Post.objects.filter(author=user)
+    return render(request, 'home/profile.html', {'user': user, 'posts': posts})
 
 
 def like(request, post_id):
@@ -112,3 +107,12 @@ def write_comment(request, post_id):
         return redirect('home:index')
 
     return render(request, 'home/write_comment.html', {'post': post})
+
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if post.author == request.user:  # Check if the post belongs to the logged-in user
+        post.delete()
+    return redirect('home:profile')
+

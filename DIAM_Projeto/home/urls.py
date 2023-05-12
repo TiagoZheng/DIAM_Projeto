@@ -7,12 +7,6 @@ urlpatterns = [
     # ex: home/
     path('', views.index, name='index'),
 
-    # ex: home/1
-    path('<int:post_id>/', views.details, name='details'),
-
-    # ex: home/1/results
-    path('<int:post_id>/results', views.results, name='results'),
-
     # ex: home/login_view/
     path('login/', views.login_view, name='login'),
 
@@ -31,5 +25,7 @@ urlpatterns = [
     path('<int:post_id>/like/', views.like, name='like'),
 
     path('<int:post_id>/write_comment', views.write_comment, name='write_comment'),
+
+    path('profile/delete/<int:post_id>/', views.delete_post, name='delete_post'),
 
 ]
