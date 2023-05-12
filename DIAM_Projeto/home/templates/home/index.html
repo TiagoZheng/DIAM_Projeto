@@ -5,16 +5,51 @@
     <title>Home Page</title>
 </head>
 <body>
-    <h1>ISCTEFlow</h1>
+    <h1>ISCTFlow</h1>
 
-    {% if user.is_authenticated %}
+{% if user.is_authenticated %}
     <section class="user-info">
-            Bem-vindo(a),     <a href="{% url 'home:perfil' %}">{{ user.username }}</a>!
+            Welcome, <a href="{% url 'home:profile' %}">{{ user.username }}</a>!
         <a href="{% url 'home:logout' %}">Logout</a>
     </section>
+
 {% else %}
     <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
-    <button onclick="window.location.href='{% url 'home:registration' %}'">Register</button>
+    <button onclick="window.location.href='{% url 'home:register' %}'">Register</button>
+{% endif %}
+
+    <br><br>
+
+    <button onclick="window.location.href='{% url 'home:new_post' %}'">New Post</button>
+
+{% if latest_post_list %}
+<ul>
+
+  {% for post in latest_post_list %}
+   <li>
+       <h2> {{ post.post_content }} </h2>
+       <form method="post" action="{% url 'home:like' post.id %}">
+           {% csrf_token %}
+           <button type="submit">Like</button>
+       </form>
+       Likes: {{ post.likes_count }}
+       <a href="{% url 'home:write_comment' post.id %}">Write Comment</a>
+
+       <h3>Comments:</h3>
+
+       {% for comment in post.comment_set.all %}
+            <p>{{ comment.comment_text }}</p>
+       {% empty %}
+            <p>No comments yet.</p>
+       {% endfor %}
+
+    </li>
+    {% endfor %}
+
+</ul>
+
+{% else %}
+<p>Nao ha publicacoes</p>
 {% endif %}
 </body>
 </html>
