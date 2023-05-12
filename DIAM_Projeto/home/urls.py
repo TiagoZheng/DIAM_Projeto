@@ -10,9 +10,6 @@ urlpatterns = [
     # ex: home/1
     path('<int:post_id>/', views.details, name='details'),
 
-    # ex: home/1/results
-    path('<int:post_id>/results', views.results, name='results'),
-
     # ex: home/login_view/
     path('login/', views.login_view, name='login'),
 
