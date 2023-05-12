@@ -31,4 +31,5 @@ urlpatterns = [
 
     path('not_logged_error/', TemplateView.as_view(template_name='home/not_logged_error.html'),name='not_logged_error'),
 
+    path('groups/', TemplateView.as_view(template_name='home/groups.html'),name='groups'),
 ]

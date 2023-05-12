@@ -37,3 +37,9 @@ class Comment(models.Model):
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Group(models.Model):
+    admin = models.ForeignKey(User, on_delete=models.CASCADE)
+    members = models.ManyToManyField(User, on_deleete=models.CASCADE, related_name='groups',blank=True)
+    group_name = models.CharField(max_lenght = 50)

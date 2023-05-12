@@ -122,3 +122,18 @@ def delete_post(request, post_id):
         post.delete()
     return redirect('home:profile')
 
+
+@login_required
+def create_group(request,group_name):
+    new_admin = request.user;
+    new_group_name = request.POST['new_post']
+    group_new = Group(admin=new_admin, group_name=new_group_name)
+
+
+@login_required
+def add_group_member(request, user_username, group_id):
+    user = User.objects.get(username=user_username)
+    group = Group.objects.get(id=group_id)
+
+
+
