@@ -7,9 +7,6 @@ urlpatterns = [
     # ex: home/
     path('', views.index, name='index'),
 
-    # ex: home/1
-    path('<int:post_id>/', views.details, name='details'),
-
     # ex: home/login_view/
     path('login/', views.login_view, name='login'),
 
