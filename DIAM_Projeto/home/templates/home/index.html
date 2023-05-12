@@ -14,21 +14,38 @@
     </section>
 
 {% else %}
-
     <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
     <button onclick="window.location.href='{% url 'home:register' %}'">Register</button>
-    <button onclick="window.location.href='{% url 'home:new_post' %}'">New Post</button>
-
 {% endif %}
+
+    <br><br>
+
+    <button onclick="window.location.href='{% url 'home:new_post' %}'">New Post</button>
 
 {% if latest_post_list %}
 <ul>
-    {% for post in latest_post_list %}
+
+  {% for post in latest_post_list %}
    <li>
-        {{ post.post_content }}
-    </a>
-</li>
+       <h2> {{ post.post_content }} </h2>
+       <form method="post" action="{% url 'home:like' post.id %}">
+           {% csrf_token %}
+           <button type="submit">Like</button>
+       </form>
+       Likes: {{ post.likes_count }}
+       <a href="{% url 'home:write_comment' post.id %}">Write Comment</a>
+
+       <h3>Comments:</h3>
+
+       {% for comment in post.comment_set.all %}
+            <p>{{ comment.comment_text }}</p>
+       {% empty %}
+            <p>No comments yet.</p>
+       {% endfor %}
+
+    </li>
     {% endfor %}
+
 </ul>
 
 {% else %}

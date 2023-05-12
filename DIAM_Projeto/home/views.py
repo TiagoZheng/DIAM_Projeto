@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Post
+from .models import Post, Comment
 
 
 # Create your views here.
@@ -92,3 +92,30 @@ def user_logout(request):
 def profile(request):
     user = request.user
     return render(request, 'home/profile.html', {'user': user})
+
+
+def like(request, post_id):
+    if request.method == 'POST':
+        post = Post.objects.get(pk=post_id)
+        post.likes_count += 1
+        post.save()
+    return redirect('home:index')
+
+
+@login_required
+def write_comment(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+
+    if request.method == 'POST':
+        comment_text = request.POST['comment_text']
+        user = request.user  # Retrieve the authenticated user
+
+        # Create a new comment instance
+        post_time = timezone.now()
+        comment = Comment(post=post, user=user, comment_text=comment_text, post_time=post_time)
+        comment.save()
+
+        # Redirect to the post details page or any other desired page
+        return redirect('home:index')
+
+    return render(request, 'home/write_comment.html', {'post': post})

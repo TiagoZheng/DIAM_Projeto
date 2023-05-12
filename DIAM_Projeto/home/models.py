@@ -9,7 +9,8 @@ import datetime
 class Post(models.Model):
     post_content = models.CharField(max_length=300)
     post_time = models.DateTimeField('post date')
-    likes = models.ManyToManyField(User, related_name='post_likes')
+    liked_by = models.ManyToManyField(User, related_name='post_likes')
+    likes_count = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.post_content

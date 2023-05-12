@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Write Comment</title>
+</head>
+<body>
+  <h1>Write Comment</h1>
+
+    <h2>Post:</h2>
+    <p>{{ post.post_content }}</p>
+
+    <h2>Write your comment:</h2>
+
+    <form method="post" action="{% url 'home:write_comment' post.id %}">
+        {% csrf_token %}
+        <textarea name="comment_text" rows="4" cols="50"></textarea>
+        <br>
+        <input type="submit" value="Submit Comment">
+    </form>
+
+    <button onclick="window.location.href='{% url 'home:index' %}'">Back</button>
+</body>
+</html>

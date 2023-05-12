@@ -27,4 +27,9 @@ urlpatterns = [
 
     # ex: home/profile
     path('profile/', views.profile, name='profile'),
+
+    path('<int:post_id>/like/', views.like, name='like'),
+
+    path('<int:post_id>/write_comment', views.write_comment, name='write_comment'),
+
 ]
