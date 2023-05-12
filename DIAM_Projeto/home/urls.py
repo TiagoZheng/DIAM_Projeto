@@ -29,4 +29,6 @@ urlpatterns = [
 
     path('<int:post_id>/write_comment', views.write_comment, name='write_comment'),
 
+    path('profile/delete/<int:post_id>/', views.delete_post, name='delete_post'),
+
 ]
