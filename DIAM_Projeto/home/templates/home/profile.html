@@ -28,6 +28,21 @@
 
 <br>
 
+ <h2>Favorite:</h2>
+{% if favorite_posts %}
+        <ul>
+            {% for post in favorite_posts %}
+                <li>
+                    {{ post.post_content }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No favorite posts available.</p>
+    {% endif %}
+
+ <br>
+
     <a href="{% url 'home:index' %}">Back</a>
 </body>
 </html>

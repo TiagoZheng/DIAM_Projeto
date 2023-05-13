@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.contrib.auth import authenticate, login, logout
@@ -8,11 +9,22 @@ from django.utils import timezone
 
 from .models import Post, Comment, Like
 
-
 # Create your views here.
+from django.db.models import Count
+
+
 def index(request):
-    latest_post_list = Post.objects.order_by('-post_time')[:5]
-    context = {'latest_post_list': latest_post_list, }
+    order_by = request.GET.get('order_by', 'time')  # Get the 'order_by' query parameter from the request
+
+    if order_by == 'likes':
+        latest_post_list = Post.objects.order_by('-likes_count', '-post_time')[:5]
+    else:
+        latest_post_list = Post.objects.order_by('-post_time')[:5]
+
+    context = {
+        'latest_post_list': latest_post_list,
+        'order_by': order_by,
+    }
     return render(request, 'home/index.html', context)
 
 
@@ -64,7 +76,9 @@ def new_post(request):
         post_title = request.POST['post_title']
         post_content = request.POST['new_post']
         post_time = timezone.now()
-        post_new = Post(post_content=post_content, post_time=post_time, author=request.user, post_title=post_title)
+        topic = request.POST['topic']
+        post_new = Post(post_content=post_content, post_time=post_time, author=request.user,
+                        post_title=post_title, topic=topic)
         post_new.save()
         return HttpResponseRedirect(reverse('home:index'))
     else:
@@ -78,10 +92,12 @@ def user_logout(request):
 
 
 @login_required
+@login_required
 def profile(request):
     user = request.user
     posts = Post.objects.filter(author=user)
-    return render(request, 'home/profile.html', {'user': user, 'posts': posts})
+    favorite_posts = user.favorite_posts.all()  # Fetch the user's favorite posts
+    return render(request, 'home/profile.html', {'user': user, 'posts': posts, 'favorite_posts': favorite_posts})
 
 
 def like(request, post_id):
@@ -121,4 +137,20 @@ def delete_post(request, post_id):
     if post.author == request.user:  # Check if the post belongs to the logged-in user
         post.delete()
     return redirect('home:profile')
+
+
+@login_required
+def save_favorite(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    user = request.user
+
+    if user.favorite_posts.filter(pk=post_id).exists():
+        # Post is already a favorite, remove it from favorites
+        user.favorite_posts.remove(post)
+    else:
+        # Post is not a favorite, add it to favorites
+        user.favorite_posts.add(post)
+
+    return redirect('home:index')
+
 
