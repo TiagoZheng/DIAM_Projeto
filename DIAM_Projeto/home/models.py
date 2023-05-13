@@ -41,5 +41,5 @@ class Like(models.Model):
 
 class Group(models.Model):
     admin = models.ForeignKey(User, on_delete=models.CASCADE)
-    members = models.ManyToManyField(User, on_deleete=models.CASCADE, related_name='groups',blank=True)
-    group_name = models.CharField(max_lenght = 50)
+    members = models.ManyToManyField(User, related_name='group_members',blank=True)
+    group_name = models.CharField(max_length = 50)

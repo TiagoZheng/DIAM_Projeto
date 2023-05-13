@@ -5,8 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidde
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib import messages
+from django.db.models import Q
 
-from .models import Post, Comment, Like
+from .models import Post, Comment, Like, Group
+
 
 
 # Create your views here.
@@ -124,16 +127,39 @@ def delete_post(request, post_id):
 
 
 @login_required
-def create_group(request,group_name):
-    new_admin = request.user;
-    new_group_name = request.POST['new_post']
-    group_new = Group(admin=new_admin, group_name=new_group_name)
-
+def create_group(request):
+    if request.method == 'POST':
+        new_group_name = request.POST.get('group_name')
+        if Group.objects.filter(group_name=new_group_name).exists():
+            messages.error(request,"A group with that name already exists")
+            return render(request, 'home/create_group.html')
+        new_admin = request.user
+        group_new = Group(admin=new_admin, group_name=new_group_name)
+        group_new.save()
+        messages.success(request,'Group created successfully!')
+        return render(request,'home/group_detail.html',{'group': group_new})
+    return render(request,'home/create_group.html')
 
 @login_required
 def add_group_member(request, user_username, group_id):
     user = User.objects.get(username=user_username)
     group = Group.objects.get(id=group_id)
 
+    if user not in group.members.all():
+        group.members.add(user)
+        group.save()
+
+    return redirect('group_detail',group_id=group_id)
+
+
+def group_detail(request, group_id):
+    group = get_object_or_404(Group,id=group_id)
+    return render(request,'home/group_detail.html', {'group':group})
+
+def my_groups(request):
+    user = request.user
+    groups = Group.objects.filter(Q(admin=user) | Q(members=user))
+    print(groups)
+    return render(request,'home/my_groups.html',{'groups':groups})
 
 

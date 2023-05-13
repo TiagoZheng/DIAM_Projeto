@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Groups</title>
+</head>
+<body>
+    <h1>ISCTFlow</h1>
+
+    <h2>Create Group</h2>
+
+  <form action="{% url 'home:create_group' %}" method="post">
+  {% csrf_token %}
+
+  <label for="group_name">Group Name:</label><br>
+  <input type="text" id="group_name" name="group_name" required>
+
+
+  <button type="submit">Submit</button>
+</form>
+</div>
+    <button onclick="window.location.href='{% url 'home:my_groups' %}'">Cancel</button>
+</body>
+</html>
+</body>
+</html>

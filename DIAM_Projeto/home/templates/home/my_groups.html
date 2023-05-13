@@ -9,6 +9,14 @@
 
     <h2>Groups you belong to : </h2>
 
+    <ul>
+        {% for group in groups %}
+            <li><a href="{% url 'home:group_detail' group.id %}">{{ group.group_name }}</a></li>
+        {% empty %}
+            <li>You don't belong to any group.</li>
+        {% endfor %}
+    </ul>
+
     <button onclick="window.location.href='{% url 'home:index' %}'">Back</button>
     <button onclick="window.location.href='{% url 'home:create_group' %}'">Create Group</button>
 </body>

@@ -31,5 +31,9 @@ urlpatterns = [
 
     path('not_logged_error/', TemplateView.as_view(template_name='home/not_logged_error.html'),name='not_logged_error'),
 
-    path('groups/', TemplateView.as_view(template_name='home/groups.html'),name='groups'),
+    path('my_groups', views.my_groups, name='my_groups'),
+
+    path('my_groups/create_group', views.create_group, name='create_group'),
+
+    path('my_groups/group_detail/<int:group_id>/', views.group_detail, name='group_detail'),
 ]

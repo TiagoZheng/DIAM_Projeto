@@ -20,7 +20,7 @@
 
     <br><br>
 {% if user.is_authenticated %}
-    <button onclick="window.location.href='{% url 'home:groups' %}'">Groups</button>
+    <button onclick="window.location.href='{% url 'home:my_groups' %}'">Groups</button>
     <button onclick="window.location.href='{% url 'home:new_post' %}'">New Post</button>
 
 {% endif %}
