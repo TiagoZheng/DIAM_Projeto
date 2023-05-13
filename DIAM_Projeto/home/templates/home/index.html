@@ -3,81 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css' %}">
+
 </head>
+
 <body>
-    <h1>ISCTFlow</h1>
-
-{% if user.is_authenticated %}
-    <section class="user-info">
-            Welcome, <a href="{% url 'home:profile' %}">{{ user.username }}</a>!
-        <a href="{% url 'home:logout' %}">Logout</a>
-    </section>
-
-{% else %}
-    <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
-    <button onclick="window.location.href='{% url 'home:register' %}'">Register</button>
-{% endif %}
-
-    <br><br>
-{% if user.is_authenticated %}
-    <button onclick="window.location.href='{% url 'home:my_groups' %}'">Groups</button>
-    <button onclick="window.location.href='{% url 'home:new_post' %}'">New Post</button>
-
-{% endif %}
-{% if latest_post_list %}
-
-     <br><br>
+        <div class="navbar">
+            <h1>ISCTFlow</h1>
+            {% if user.is_authenticated %}
+                <section class="user-info">
+                    Welcome, <a href="{% url 'home:profile' %}">{{ user.username }}</a>!
+                    <a href="{% url 'home:logout' %}">Logout</a>
+                </section>
+            {% else %}
+                <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
+                <button onclick="window.location.href='{% url 'home:register' %}'">Register</button>
+            {% endif %}
+        </div>
 
 
-<form method="get" action="{% url 'home:index' %}">
-    <label for="order_by">Order By:</label>
-    <select id="order_by" name="order_by">
-        <option value="time" {% if order_by == 'time' %}selected{% endif %}>Most Recent</option>
-        <option value="likes" {% if order_by == 'likes' %}selected{% endif %}>Likes</option>
-    </select>
+        <div class="filter">
+            {% if user.is_authenticated %}
+            <button onclick="window.location.href='{% url 'home:my_groups' %}'">Groups</button>
+                <button onclick="window.location.href='{% url 'home:new_post' %}'">New Post</button>
+            {% endif %}
 
-    <button type="submit">Apply</button>
-</form>
+            {% if latest_post_list %}
+                <form method="get" action="{% url 'home:index' %}">
+                    <label for="order_by">Order By:</label>
+                    <select id="order_by" name="order_by">
+                        <option value="time" {% if order_by == 'time' %}selected{% endif %}>Most Recent</option>
+                        <option value="likes" {% if order_by == 'likes' %}selected{% endif %}>Likes</option>
+                    </select>
 
-    <br><br>
+                    <button type="submit">Apply</button>
+                </form>
+        </div>
 
+{% for post in latest_post_list %}
 
-<ul>
-  {% for post in latest_post_list %}
-   <li>
+        <div class="post">
+            <section class="post_tittle">
+                <h2> {{ post.post_title }} </h2>
+            </section>
 
-       <h2> {{ post.post_title }} </h2>
+            <section class="post_content">
+                <p>{{ post.post_content }} </p>
+            </section>
 
-       <a>{{ post.post_content }} </a>
-       <br>
+            <section class="actions_post">
+                Likes: {{ post.likes_count }}
 
+                 {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'home:like' post.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Like</button>
+                    </form>
+                    <a href="{% url 'home:write_comment' post.id %}">Write Comment</a>
+                {% else %}
+                    <a href="{% url 'home:not_logged_error' %}">Write Comment</a>
+                {% endif %}
 
-      {% if user.is_authenticated %}
-    <form method="post" action="{% url 'home:save_favorite' post.id %}">
-        {% csrf_token %}
-        {% if post in user.favorite_posts.all %}
-            <button type="submit" name="action" value="remove">Remove from Favorites</button>
-        {% else %}
-            <button type="submit" name="action" value="save">Save as Favorite</button>
-        {% endif %}
-    </form>
-{% endif %}
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'home:save_favorite' post.id %}">
+                        {% csrf_token %}
+                        {% if post in user.favorite_posts.all %}
+                            <button type="submit" name="action" value="remove">Remove from Favorites</button>
+                        {% else %}
+                            <button type="submit" name="action" value="save">Save as Favorite</button>
+                        {% endif %}
+                    </form>
+                {% endif %}
+            </section>
+        </div>
 
-
-
-
-       Likes: {{ post.likes_count }}
-       <br>
-       {% if user.is_authenticated %}
-       <br>
-       <form method="post" action="{% url 'home:like' post.id %}">
-           {% csrf_token %}
-           <button type="submit">Like</button>
-           <a href="{% url 'home:write_comment' post.id %}">Write Comment</a>
-       </form>
-        {% else %}
-       <a href="{% url 'home:not_logged_error' %}">Write Comment</a>
-        {% endif %}
        <h3>Comments:</h3>
 
        {% for comment in post.comment_set.all %}
@@ -86,13 +87,15 @@
             <p>No comments yet.</p>
        {% endfor %}
 
-    </li>
+        </p>
     {% endfor %}
 
-</ul>
+
 
 {% else %}
 <p>Nao ha publicacoes</p>
 {% endif %}
+
+
 </body>
 </html>
