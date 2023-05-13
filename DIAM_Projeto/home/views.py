@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.utils import timezone
@@ -141,25 +141,55 @@ def create_group(request):
     return render(request,'home/create_group.html')
 
 @login_required
-def add_group_member(request, user_username, group_id):
-    user = User.objects.get(username=user_username)
-    group = Group.objects.get(id=group_id)
+def add_group_member(request, group_id):
+    context = {'request': request}
+    if request.method == 'POST':
+        group_member = request.POST['new_group_member']
+        try:
+            user = get_object_or_404(User, username=group_member)
+        except Http404:
+            error_msg = f"No user with username '{group_member}' was found."
+            context['error'] = error_msg
+            return redirect('home:group_detail', group_id=group_id)
+        group = Group.objects.get(id=group_id)
+        if user not in group.members.all():
+            group.members.add(user)
+            group.save()
+            return redirect('home:my_groups')
+        else:
+            return render(request, 'home/add_group_member.html', {'group_id': group_id})
+    else:
+        return render(request, 'home/add_group_member.html', {'group_id': group_id})
 
-    if user not in group.members.all():
-        group.members.add(user)
-        group.save()
-
-    return redirect('group_detail',group_id=group_id)
-
-
+@login_required
 def group_detail(request, group_id):
     group = get_object_or_404(Group,id=group_id)
     return render(request,'home/group_detail.html', {'group':group})
 
+@login_required
 def my_groups(request):
     user = request.user
     groups = Group.objects.filter(Q(admin=user) | Q(members=user))
     print(groups)
-    return render(request,'home/my_groups.html',{'groups':groups})
+    return render(request, 'home/my_groups.html', {'groups':groups})
+
+@login_required
+def delete_group(request, group_id):
+    group = get_object_or_404(Group, pk=group_id)
+    if group.admin == request.user:  # Check if the group belongs to the logged-in user
+        group.delete()
+    return redirect('home:my_groups')
+
+@login_required
+def delete_member(request, group_id):
+    group = get_object_or_404(Group,pk=group_id)
+    if request.method=='POST':
+        member_username = request.POST['group_member']
+        user = get_object_or_404(User,username=member_username)
+        group.members.remove(user.id)
+        return redirect('home:group_detail',group_id=group_id)
+    return render(request,'home/delete_member.html', {'group_id': group_id})
+
+
 
 

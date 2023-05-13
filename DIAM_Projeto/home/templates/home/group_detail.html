@@ -18,11 +18,16 @@
     <ul>
         {% for member in group.members.all %}
             <li>{{ member.username }}</li>
+        <br>
         {% empty %}
             <li>Your group has no members.</li>
         {% endfor %}
     </ul>
-
+    <button onclick="window.location.href='{% url 'home:add_group_member' group.id %}'">Add New Group Member</button>
+    <br>
+    <button onclick="window.location.href='{% url 'home:delete_member' group.id %}'">Remove Group Member</button>
+    <br>
+    <button onclick="window.location.href='{% url 'home:delete_group' group.id %}'">Delete Group</button>
     <button onclick="window.location.href='{% url 'home:my_groups' %}'">Back</button>
 
 </body>
