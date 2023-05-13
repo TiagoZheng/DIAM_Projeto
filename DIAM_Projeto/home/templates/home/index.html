@@ -25,13 +25,47 @@
 
 {% endif %}
 {% if latest_post_list %}
-<ul>
 
+     <br><br>
+
+
+<form method="get" action="{% url 'home:index' %}">
+    <label for="order_by">Order By:</label>
+    <select id="order_by" name="order_by">
+        <option value="time" {% if order_by == 'time' %}selected{% endif %}>Most Recent</option>
+        <option value="likes" {% if order_by == 'likes' %}selected{% endif %}>Likes</option>
+    </select>
+
+    <button type="submit">Apply</button>
+</form>
+
+    <br><br>
+
+
+<ul>
   {% for post in latest_post_list %}
    <li>
+
        <h2> {{ post.post_title }} </h2>
+
        <a>{{ post.post_content }} </a>
        <br>
+
+
+      {% if user.is_authenticated %}
+    <form method="post" action="{% url 'home:save_favorite' post.id %}">
+        {% csrf_token %}
+        {% if post in user.favorite_posts.all %}
+            <button type="submit" name="action" value="remove">Remove from Favorites</button>
+        {% else %}
+            <button type="submit" name="action" value="save">Save as Favorite</button>
+        {% endif %}
+    </form>
+{% endif %}
+
+
+
+
        Likes: {{ post.likes_count }}
        <br>
        {% if user.is_authenticated %}

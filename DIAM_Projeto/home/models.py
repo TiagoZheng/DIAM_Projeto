@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser, Group, Permission
 from django.db import models
 from django.utils import timezone
 
@@ -16,6 +16,8 @@ class Post(models.Model):
     post_title = models.CharField(max_length=100, default='No title')
     liked_by = models.ManyToManyField(User, related_name='post_likes')
     likes_count = models.PositiveIntegerField(default=0)
+    topic = models.CharField(max_length=100, null=True)
+    favorited_by = models.ManyToManyField(User, related_name='favorite_posts')
 
     def __str__(self):
         return self.post_content
@@ -37,6 +39,16 @@ class Comment(models.Model):
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.post.post_title}"
+
+
 
 
 class Group(models.Model):
