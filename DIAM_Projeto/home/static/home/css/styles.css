@@ -1,0 +1,40 @@
+section{
+     background-color: yellow;
+}
+
+.navbar{
+    width: 85%;
+    margin: auto;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-info{
+    text-align: right;
+}
+
+.filter{
+    width: 50%;
+    background-color: grey;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.post{
+    width: 50%;
+    margin: auto;
+    border-style: solid;
+    border-width: medium;
+}
+
+.post_tittle{
+    font-size: 20px;
+}
+
+.actions_post{
+    display: flex;
+    justify-content: space-between;
+}
