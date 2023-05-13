@@ -92,10 +92,12 @@ def user_logout(request):
 
 
 @login_required
+@login_required
 def profile(request):
     user = request.user
     posts = Post.objects.filter(author=user)
-    return render(request, 'home/profile.html', {'user': user, 'posts': posts})
+    favorite_posts = user.favorite_posts.all()  # Fetch the user's favorite posts
+    return render(request, 'home/profile.html', {'user': user, 'posts': posts, 'favorite_posts': favorite_posts})
 
 
 def like(request, post_id):
@@ -135,3 +137,20 @@ def delete_post(request, post_id):
     if post.author == request.user:  # Check if the post belongs to the logged-in user
         post.delete()
     return redirect('home:profile')
+
+
+@login_required
+def save_favorite(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    user = request.user
+
+    if user.favorite_posts.filter(pk=post_id).exists():
+        # Post is already a favorite, remove it from favorites
+        user.favorite_posts.remove(post)
+    else:
+        # Post is not a favorite, add it to favorites
+        user.favorite_posts.add(post)
+
+    return redirect('home:index')
+
+

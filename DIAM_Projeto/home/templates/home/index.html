@@ -43,9 +43,27 @@
 <ul>
   {% for post in latest_post_list %}
    <li>
+
        <h2> {{ post.post_title }} </h2>
+
        <a>{{ post.post_content }} </a>
        <br>
+
+
+      {% if user.is_authenticated %}
+    <form method="post" action="{% url 'home:save_favorite' post.id %}">
+        {% csrf_token %}
+        {% if post in user.favorite_posts.all %}
+            <button type="submit" name="action" value="remove">Remove from Favorites</button>
+        {% else %}
+            <button type="submit" name="action" value="save">Save as Favorite</button>
+        {% endif %}
+    </form>
+{% endif %}
+
+
+
+
        Likes: {{ post.likes_count }}
        <br>
        {% if user.is_authenticated %}

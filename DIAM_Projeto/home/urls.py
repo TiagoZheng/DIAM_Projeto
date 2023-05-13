@@ -29,6 +29,8 @@ urlpatterns = [
 
     path('profile/delete/<int:post_id>/', views.delete_post, name='delete_post'),
 
-    path('not_logged_error/', TemplateView.as_view(template_name='home/not_logged_error.html'),name='not_logged_error'),
+    path('not_logged_error/', TemplateView.as_view(template_name='home/not_logged_error.html'),
+         name='not_logged_error'),
 
+    path('<int:post_id>/save_favorite/', views.save_favorite, name='save_favorite'),
 ]
