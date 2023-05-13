@@ -8,13 +8,13 @@ from django.utils import timezone
 from django.contrib import messages
 from django.db.models import Q
 
-from .models import Post, Comment, Like, Group
+from .models import Post, Comment, Like, Group, GroupPost
 
 
 
 # Create your views here.
 def index(request):
-    latest_post_list = Post.objects.order_by('-post_time')[:5]
+    latest_post_list = Post.objects.exclude(grouppost__isnull=False).order_by('-post_time')[:5]
     context = {'latest_post_list': latest_post_list, }
     return render(request, 'home/index.html', context)
 
@@ -163,8 +163,9 @@ def add_group_member(request, group_id):
 
 @login_required
 def group_detail(request, group_id):
+    latest_post_list = GroupPost.objects.filter(group_id=group_id)
     group = get_object_or_404(Group,id=group_id)
-    return render(request,'home/group_detail.html', {'group':group})
+    return render(request,'home/group_detail.html', {'group':group,'latest_post_list': latest_post_list})
 
 @login_required
 def my_groups(request):
@@ -191,5 +192,15 @@ def delete_member(request, group_id):
     return render(request,'home/delete_member.html', {'group_id': group_id})
 
 
-
-
+def new_group_post(request,group_id):
+    if request.method == 'POST':
+        post_title = request.POST['post_title']
+        post_content = request.POST['new_post']
+        post_time = timezone.now()
+        group = get_object_or_404(Group, pk=group_id)
+        post_new = Post(post_content=post_content, post_time=post_time, author=request.user, post_title=post_title)
+        group_post_new = GroupPost(post=post_new,group=group)
+        post_new.save()
+        return HttpResponseRedirect(reverse('home:group_detail', args=[group_id]))
+    else:
+        return render(request, 'home/new_group_post.html', {'group_id':group_id})

@@ -43,3 +43,8 @@ class Group(models.Model):
     admin = models.ForeignKey(User, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, related_name='group_members',blank=True)
     group_name = models.CharField(max_length = 50)
+
+
+class GroupPost(models.Model):
+    post = models.OneToOneField(Post, on_delete=models.CASCADE)
+    group = models.OneToOneField(Group, on_delete=models.CASCADE)

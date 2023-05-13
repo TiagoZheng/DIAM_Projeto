@@ -10,7 +10,9 @@
     <h2>Group details</h2>
 
     <h3>{{ group.group_name }}</h3>
-
+    <br>
+     <button onclick="window.location.href='{% url 'home:new_group_post'  group.id %}'">New Group Post</button>
+    <br>
     <h3>Admin : {{ group.admin }} </h3>
 
     <br>
@@ -21,6 +23,11 @@
         <br>
         {% empty %}
             <li>Your group has no members.</li>
+        {% endfor %}
+        {% for grouppost in latest_post_list %}
+   <li>
+       <h2> {{ grouppost.post.post_title }} </h2>
+       <a>{{ grouppost.post.post_content }} </a>
         {% endfor %}
     </ul>
     <button onclick="window.location.href='{% url 'home:add_group_member' group.id %}'">Add New Group Member</button>
