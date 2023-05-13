@@ -223,15 +223,33 @@ def delete_member(request, group_id):
     return render(request,'home/delete_member.html', {'group_id': group_id})
 
 @login_required
-def new_group_post(request,group_id):
+def new_group_post(request, group_id):
     if request.method == 'POST':
         post_title = request.POST['post_title']
-        post_content = request.POST['new_post']
-        post_time = timezone.now()
-        group = get_object_or_404(Group, pk=group_id)
-        post_new = Post(post_content=post_content, post_time=post_time, author=request.user, post_title=post_title)
-        group_post_new = GroupPost(post=post_new,group=group)
-        post_new.save()
-        return HttpResponseRedirect(reverse('home:group_detail', args=[group_id]))
+        post_content = request.POST['post_content']
+        topic = request.POST['topic']
+        group = Group.objects.get(id=group_id)
+
+        # Check if the user is a member of the group
+        if request.user not in group.members.all() and request.user != group.admin:
+            return HttpResponseForbidden("You are not a member of this group.")
+
+        # Create a new Post instance
+        post = Post.objects.create(
+            author=request.user,
+            post_title=post_title,
+            post_content=post_content,
+            post_time=timezone.now(),
+            topic=topic
+        )
+
+        # Create a new GroupPost instance and associate it with the group and post
+        group_post = GroupPost.objects.create(
+            group=group,
+            post=post
+        )
+
+        return redirect('home:group_detail', group_id=group_id)
     else:
-        return render(request, 'home/new_group_post.html', {'group_id':group_id})
+        # Handle GET request for displaying the form
+        return render(request, 'home/new_group_post.html', {'group_id': group_id})

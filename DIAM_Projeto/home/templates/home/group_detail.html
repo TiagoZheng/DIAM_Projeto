@@ -3,17 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Group detail</title>
+
+    <style>
+    h2,h3 {
+      color: #5E5DF0;
+    }
+  </style>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css'  %}">
 </head>
 <body>
-    <h1>ISCTFlow</h1>
+    <a href="/home">
+        <img src="{% static 'home/images/image.png'%}" alt="ISCTEFLOW" width="400" height="100">
+        </a>
 
     <h2>Group details</h2>
 
     <h3>{{ group.group_name }}</h3>
     <br>
-     <button onclick="window.location.href='{% url 'home:new_group_post'  group.id %}'">New Group Post</button>
+    <button class="button-34" onclick="window.location.href='{% url 'home:new_group_post' group.id %}'">New Group Post</button>
     <br>
-    <h3>Admin : {{ group.admin }} </h3>
+    <h3>Admin: {{ group.admin }}</h3>
 
     <br>
     <h3>Members:</h3>
@@ -24,18 +35,32 @@
         {% empty %}
             <li>Your group has no members.</li>
         {% endfor %}
+    </ul>
+
+    <h3>Group Posts:</h3>
+    <ul>
         {% for grouppost in latest_post_list %}
-   <li>
-       <h2> {{ grouppost.post.post_title }} </h2>
-       <a>{{ grouppost.post.post_content }} </a>
+            <li>
+                <h4>{{ grouppost.post.post_title }}</h4>
+                <p>{{ grouppost.post.post_content }}</p>
+            </li>
+        {% empty %}
+            <li>No posts in this group yet.</li>
         {% endfor %}
     </ul>
-    <button onclick="window.location.href='{% url 'home:add_group_member' group.id %}'">Add New Group Member</button>
+
+      {% if request.user == group.admin %}
+
+    <button class="button-34"  onclick="window.location.href='{% url 'home:add_group_member' group.id %}'">Add New Group Member</button>
     <br>
-    <button onclick="window.location.href='{% url 'home:delete_member' group.id %}'">Remove Group Member</button>
     <br>
-    <button onclick="window.location.href='{% url 'home:delete_group' group.id %}'">Delete Group</button>
-    <button onclick="window.location.href='{% url 'home:my_groups' %}'">Back</button>
+
+    <button class="button-33" onclick="window.location.href='{% url 'home:delete_member' group.id %}'">Remove Group Member</button>
+    <br>
+    <br>
+    <button class="button-33" onclick="window.location.href='{% url 'home:delete_group' group.id %}'">Delete Group</button>
+    {% endif %}
+    <button class="button-34" onclick="window.location.href='{% url 'home:my_groups' %}'">Back</button>
 
 </body>
 </html>

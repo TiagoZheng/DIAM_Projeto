@@ -3,16 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Not Logged In</title>
+      <style>
+    h1 {
+      color: #5E5DF0;
+    }
+  </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css' %}">
 </head>
 <body>
-    <h1>ISCTFlow</h1>
-
+     <a href="/home">
+        <img src="{% static 'home/images/image.png'%}" alt="ISCTEFLOW" width="400" height="100">
+        </a>
+    <br>
+     <br>
     <a>You are not logged in, if you want to be able to make comments and likes you need to log in</a>
 
     <br>
     <a>If you do not have an account you can also create one for free</a>
-
-    <button onclick="window.location.href='{% url 'home:login' %}'">Login</button>
-    <button onclick="window.location.href='{% url 'home:register' %}'">Register</button>
+<br>
+    <br>
+    <button class="button-34" onclick="window.location.href='{% url 'home:login' %}'">Login</button>
+    <br>
+    <br>
+    <button class="button-34" onclick="window.location.href='{% url 'home:register' %}'">Register</button>
+    <br>
+<br>
+    <button class="button-34" onclick="window.location.href='{% url 'home:index' %}'">Back</button>
 </body>
 </html>

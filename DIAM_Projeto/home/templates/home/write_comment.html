@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Write Comment</title>
+      <style>
+    h1,h2 {
+      color: #5E5DF0;
+    }
+  </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css' %}">
 </head>
 <body>
+ <a href="/home">
+        <img src="{% static 'home/images/image.png'%}" alt="ISCTEFLOW" width="400" height="100">
+        </a>
   <h1>Write Comment</h1>
 
     <h2>Post:</h2>
@@ -16,9 +26,9 @@
         {% csrf_token %}
         <textarea name="comment_text" rows="4" cols="50"></textarea>
         <br>
-        <input type="submit" value="Submit Comment">
+        <input class="button-34" type="submit" value="Submit Comment">
     </form>
-
-    <button onclick="window.location.href='{% url 'home:index' %}'">Back</button>
+    <br>
+    <button class="button-34" onclick="window.location.href='{% url 'home:index' %}'">Back</button>
 </body>
 </html>

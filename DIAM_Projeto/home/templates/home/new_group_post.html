@@ -3,36 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Group Post</title>
+      <style>
+    h1,h2 {
+      color: #5E5DF0;
+    }
+  </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css' %}">
 </head>
 <body>
-
 <div class="form-container">
+   <a href="/home">
+        <img src="{% static 'home/images/image.png'%}" alt="ISCTEFLOW" width="400" height="100">
+        </a>
   <h2>Create Group Post</h2>
 
   <form action="{% url 'home:new_group_post' group_id %}" method="post">
-  {% csrf_token %}
+    {% csrf_token %}
 
-  <label for="post_title">Post Title:</label><br>
-  <input type="text" id="post_title" name="post_title" required>
-  <br><br>
+    <label for="post_title">Post Title:</label><br>
+    <input type="text" id="post_title" name="post_title" required>
+    <br><br>
 
-  <label for="new_post">New Group Post:</label><br>
-  <textarea id="new_post" name="new_post" rows="4" cols="50" placeholder="Write your post here..."></textarea>
-  <br><br>
+    <label for="post_content">New Group Post:</label><br>
+    <textarea id="post_content" name="post_content" rows="4" cols="50" placeholder="Write your post here..."></textarea>
+    <br><br>
 
-  <label for="topic">Topic:</label>
-      <select id="topic" name="topic">
-        <option value="java">Java</option>
-        <option value="python">Python</option>
-        <option value="html">HTML</option>
-        <option value="other">Other</option>
-      </select>
+    <label for="topic">Topic:</label>
+    <select id="topic" name="topic">
+      <option value="java">Java</option>
+      <option value="python">Python</option>
+      <option value="html">HTML</option>
+      <option value="other">Other</option>
+    </select>
 
-  <br><br>
+    <br><br>
 
-  <button type="submit">Submit</button>
-</form>
+    <button class="button-34" type="submit">Submit</button>
+  </form>
 </div>
-    <button onclick="window.location.href='{% url 'home:group_detail' group_id %}'">Cancel</button>
+<br>
+    <button class="button-34" onclick="window.location.href='{% url 'home:group_detail' group_id %}'">Cancel</button>
 </body>
 </html>

@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Groups</title>
+      <style>
+    h1,h2 {
+      color: #5E5DF0;
+    }
+  </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css' %}">
 </head>
 <body>
-    <h1>ISCTFlow</h1>
+    <a href="/home">
+        <img src="{% static 'home/images/image.png'%}" alt="ISCTEFLOW" width="400" height="100">
+        </a>
 
     <h2>Create Group</h2>
 
@@ -16,10 +25,10 @@
   <input type="text" id="group_name" name="group_name" required>
 
 
-  <button type="submit">Submit</button>
+  <button class="button-34" type="submit">Submit</button>
 </form>
 </div>
-    <button onclick="window.location.href='{% url 'home:my_groups' %}'">Cancel</button>
+    <button class="button-34" onclick="window.location.href='{% url 'home:my_groups' %}'">Cancel</button>
 </body>
 </html>
 </body>

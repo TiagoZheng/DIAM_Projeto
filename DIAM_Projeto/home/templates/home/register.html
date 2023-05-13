@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration Page</title>
+    <style>
+     h1 {
+      color: #5E5DF0;
+    }
+  </style>
+     {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css' %}">
 </head>
 <body>
+ <a href="/home">
+        <img src="{% static 'home/images/image.png'%}" alt="ISCTEFLOW" width="400" height="100">
+        </a>
     <h1>Registration</h1>
     <form method="POST" action="{% url 'home:register' %}">
         {% csrf_token %}
@@ -12,24 +22,25 @@
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
         </div>
-
+            <br>
         <div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-
+            <br>
         <div>
             <label for="confirm_password">Confirm Password:</label>
             <input type="password" id="confirm_password" name="confirm_password" required>
         </div>
-
+<br>
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email">
         </div>
-        <button type="submit">Register</button>
+        <br>
+        <button class="button-34" type="submit">Register</button>
     </form>
-
-    <button onclick="window.location.href='{% url 'home:index' %}'">Back</button>
+    <br>
+    <button class="button-34" onclick="window.location.href='{% url 'home:index' %}'">Back</button>
 </body>
 </html>

@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Groups</title>
+      <style>
+    h1,h2 {
+      color: #5E5DF0;
+    }
+  </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/styles.css' %}">
 </head>
 <body>
-    <h1>ISCTFlow</h1>
+     <a href="/home">
+        <img src="{% static 'home/images/image.png'%}" alt="ISCTEFLOW" width="400" height="100">
+        </a>
 
     <h2>Groups you belong to : </h2>
 
@@ -17,7 +26,7 @@
         {% endfor %}
     </ul>
 
-    <button onclick="window.location.href='{% url 'home:index' %}'">Back</button>
-    <button onclick="window.location.href='{% url 'home:create_group' %}'">Create Group</button>
+    <button class="button-34" onclick="window.location.href='{% url 'home:index' %}'">Back</button>
+    <button class="button-34" onclick="window.location.href='{% url 'home:create_group' %}'">Create Group</button>
 </body>
 </html>

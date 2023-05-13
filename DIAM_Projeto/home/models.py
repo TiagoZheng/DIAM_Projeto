@@ -22,6 +22,7 @@ class Post(models.Model):
     def __str__(self):
         return self.post_content
 
+
     def is_recent_publish(self):
         return self.post_time >= timezone.now() - datetime.timedelta(days=1)
 
